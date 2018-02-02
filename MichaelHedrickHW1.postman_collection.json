@@ -1,14 +1,14 @@
 {
-	"id": "e53469e7-c4bd-38b7-211e-288f113296b3",
+	"id": "29d0a77c-45f9-7cfd-550c-4072f0612885",
 	"name": "MichaelHedrickHW1",
 	"description": "This is a postman collection for Homework 1 in Web API.  This is my first time using postman.",
 	"order": [
-		"a6cc7d23-eb51-39ca-657c-13cd7c5cf5c3",
-		"e3e18e3e-4e5a-83b3-c904-e8b0e12377e8"
+		"d18b98e3-846e-3a14-6286-83e7287dad96",
+		"0dcf5ce0-ee47-4ffe-c9e5-be1440f19cf5"
 	],
 	"folders": [],
 	"folders_order": [],
-	"timestamp": 1517435816461,
+	"timestamp": 0,
 	"owner": "3599339",
 	"public": false,
 	"events": [],
@@ -16,10 +16,47 @@
 	"auth": null,
 	"requests": [
 		{
-			"id": "a6cc7d23-eb51-39ca-657c-13cd7c5cf5c3",
+			"id": "0dcf5ce0-ee47-4ffe-c9e5-be1440f19cf5",
+			"headers": "",
+			"headerData": [],
+			"url": "https://www.googleapis.com/books/v1/volumes/{{id}}",
+			"folder": null,
+			"queryParams": [],
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6ea872d9-8da6-4003-8136-76ea5a52edf1",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"1.id match\"] = (responseBody.has(pm.environment.get(\"id\")));",
+							"tests[\"2.response code 200 (ok)\"] = (responseCode.code === 200);"
+						]
+					}
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"auth": null,
+			"time": 1517589426586,
+			"name": "Volume",
+			"description": null,
+			"collectionId": "29d0a77c-45f9-7cfd-550c-4072f0612885",
+			"responses": [],
+			"preRequestScript": null,
+			"tests": "tests[\"1.id match\"] = (responseBody.has(pm.environment.get(\"id\")));\ntests[\"2.response code 200 (ok)\"] = (responseCode.code === 200);",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "d18b98e3-846e-3a14-6286-83e7287dad96",
 			"headers": "",
 			"headerData": [],
 			"url": "https://www.googleapis.com/books/v1/volumes?q={{book_title}}",
+			"folder": null,
 			"queryParams": [
 				{
 					"key": "q",
@@ -44,7 +81,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "a31ebd6b-25de-4875-ac02-02d057c8a5f1",
+						"id": "8e7bba67-d7cb-4abe-b373-0f465d4f54fd",
 						"type": "text/javascript",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
@@ -53,12 +90,8 @@
 							"",
 							"for(i = 0; i < jsonData.items.length; i++) {",
 							"    var title = jsonData.items[i].volumeInfo.title;",
-							"    var id = jsonData.items[i].id;",
-							"    postman.setEnvironmentVariable(\"id\", id);",
-							"    console.log(\"title \", + title);",
 							"    var patt = /turing/i;",
 							"    var res = patt.test(title);",
-							"    console.log(res);",
 							"    if (res === false) {",
 							"        titlePass = false;          // A title was found without \"Turing\"",
 							"    }",
@@ -66,6 +99,10 @@
 							"        responseCodeOk = false;     // There was a problem with the response",
 							"    }",
 							"}",
+							"var id = jsonData.items[0].id;      // Get the ID of the first book to test",
+							"// Set the environment variable for the next test",
+							"postman.setEnvironmentVariable(\"id\", id);",
+							"",
 							"tests[\"1.book title test\"] = (titlePass === true);",
 							"tests[\"2.response status code 200 (ok)\"] = (responseCodeOk === true);"
 						]
@@ -77,51 +114,14 @@
 			"method": "GET",
 			"data": null,
 			"dataMode": "params",
-			"version": 2,
 			"auth": null,
-			"time": 1517505783548,
+			"time": 1517589421191,
 			"name": "Books",
-			"description": "This request finds books with Turing in the title.",
-			"collectionId": "e53469e7-c4bd-38b7-211e-288f113296b3",
+			"description": "This request find books with Turig in the title.",
+			"collectionId": "29d0a77c-45f9-7cfd-550c-4072f0612885",
 			"responses": [],
 			"preRequestScript": "pm.environment.set(\"book_title\", \"Turing\");\n",
-			"tests": "var jsonData = JSON.parse(responseBody);\nvar titlePass = true;      // False if a title doesn't contain Turing\nvar responseCodeOk = true; // False if there is a bad response\n\nfor(i = 0; i < jsonData.items.length; i++) {\n    var title = jsonData.items[i].volumeInfo.title;\n    var id = jsonData.items[i].id;\n    postman.setEnvironmentVariable(\"id\", id);\n    console.log(\"title \", + title);\n    var patt = /turing/i;\n    var res = patt.test(title);\n    console.log(res);\n    if (res === false) {\n        titlePass = false;          // A title was found without \"Turig\"\n    }\n    if (responseCode.code != 200) {\n        responseCodeOk = false;     // There was a problem with the response\n    }\n}\ntests[\"1.book title test\"] = (titlePass === true);\ntests[\"2.response status code 200 (ok)\"] = (responseCodeOk === true);",
-			"currentHelper": null,
-			"helperAttributes": null
-		},
-		{
-			"id": "e3e18e3e-4e5a-83b3-c904-e8b0e12377e8",
-			"headers": "",
-			"headerData": [],
-			"url": "https://www.googleapis.com/books/v1/volumes/{{id}}",
-			"queryParams": [],
-			"events": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "5f1a8d19-bb4a-4c3c-b38b-fd617e68f7af",
-						"type": "text/javascript",
-						"exec": [
-							"tests[\"id match\"] = (responseBody.has(pm.environment.get(\"id\")));",
-							"tests[\"response code 200 (ok)\"] = (responseCode.code === 200);"
-						]
-					}
-				}
-			],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "GET",
-			"data": null,
-			"dataMode": "params",
-			"version": 2,
-			"auth": null,
-			"time": 1517505778502,
-			"name": "Volume",
-			"description": "",
-			"collectionId": "e53469e7-c4bd-38b7-211e-288f113296b3",
-			"responses": [],
-			"preRequestScript": null,
-			"tests": "tests[\"id match\"] = (responseBody.has(pm.environment.get(\"id\")));\ntests[\"response code 200 (ok)\"] = (responseCode.code === 200);",
+			"tests": "var jsonData = JSON.parse(responseBody);\nvar titlePass = true;      // False if a title doesn't contain Turing\nvar responseCodeOk = true; // False if there is a bad response\n\nfor(i = 0; i < jsonData.items.length; i++) {\n    var title = jsonData.items[i].volumeInfo.title;\n    var patt = /turing/i;\n    var res = patt.test(title);\n    if (res === false) {\n        titlePass = false;          // A title was found without \"Turing\"\n    }\n    if (responseCode.code != 200) {\n        responseCodeOk = false;     // There was a problem with the response\n    }\n}\nvar id = jsonData.items[0].id;      // Get the ID of the first book to test\n// Set the environment variable for the next test\npostman.setEnvironmentVariable(\"id\", id);\n\ntests[\"1.book title test\"] = (titlePass === true);\ntests[\"2.response status code 200 (ok)\"] = (responseCodeOk === true);",
 			"currentHelper": null,
 			"helperAttributes": null
 		}
