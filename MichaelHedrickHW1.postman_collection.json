@@ -117,7 +117,7 @@
 			"auth": null,
 			"time": 1517589421191,
 			"name": "Books",
-			"description": "This request find books with Turig in the title.",
+			"description": "This request find books with Turing in the title.",
 			"collectionId": "29d0a77c-45f9-7cfd-550c-4072f0612885",
 			"responses": [],
 			"preRequestScript": "pm.environment.set(\"book_title\", \"Turing\");\n",
